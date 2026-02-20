@@ -13,9 +13,10 @@ The project is designed for local development and Kubernetes-based deployments.
 ## 📦 Repository Structure
 ```bash
   .
-  ├── frontend/
   ├── backend/
-  └── k8s/
+  ├── frontend/
+  ├── k8s/
+  └── terraform/
 ```
   
 ---
