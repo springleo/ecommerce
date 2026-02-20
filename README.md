@@ -5,7 +5,8 @@ This repository contains a containerized **3-tier eCommerce application** consis
 - **Frontend** – UI layer
 - **Backend** – API / business logic
 - **Kubernetes Manifests** – Deployment resources under `k8s/`
-
+- **Terraform** – IaC (future use-case)
+  
 The project is designed for local development and Kubernetes-based deployments.
 
 ---
