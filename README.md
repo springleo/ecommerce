@@ -52,12 +52,12 @@ docker build -t backend:local .
 cd ../frontend
 docker build --no-cache -t frontend:local .
 ```
-### 3️⃣ Deploy to Kubernetes (k3s)
+### 3️⃣ Deploy to local Kubernetes cluster (k3s)
 ```bash
 cd ..
 kubectl apply -f k8s/
 ```
-###🔎 Verify Deployment
+### 🔎 Verify Deployment
 ```bash
 kubectl get pods
 kubectl get svc
