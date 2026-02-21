@@ -5,7 +5,7 @@ This repository contains a containerized **3-tier eCommerce application** consis
 - **Frontend** – UI layer
 - **Backend** – API / business logic
 - **Kubernetes Manifests** – Deployment resources under `k8s/`
-- **Terraform** – IaC (future use-case)
+- **Terraform** – IaC 
   
 The project is designed for local development and Kubernetes-based deployments.
 
@@ -62,3 +62,63 @@ kubectl apply -f k8s/
 kubectl get pods
 kubectl get svc
 ```
+
+## 🏗️ Terraform Deployment Steps (Executed from WSL Debian)
+
+The AKS infrastructure was provisioned using Terraform from a local **WSL Debian** environment with a remote Azure Storage backend for state management.
+
+### ⚙️ Prerequisites
+
+Ensure the following tools are installed inside WSL:
+
+- Terraform
+- Azure CLI (`az`)
+- kubectl (optional for later deployment)
+
+Login to Azure:
+
+```bash
+az login
+```
+
+### 📦 Initialize Terraform
+Initialize providers and configure the remote backend (Azure Storage Account + tfstate container):
+```bash
+cd terraform
+terraform init
+```
+If backend configuration was updated or state migrated:
+```bash
+terraform init -reconfigure
+# or
+terraform init -migrate-state
+```
+### ✅ Validate Configuration
+Check Terraform syntax and configuration:
+```bash
+terraform validate
+```
+
+### 🔎 Review Planned Changes
+```bash
+terraform plan -out=tfplan
+```
+The plan file is temporary and should not be committed to source control.
+
+### 🚀 Apply Infrastructure Changes
+```bash
+terraform apply tfplan
+```
+This step provisions:
+
+- Resource Group
+- Virtual Network (Public + Private subnets)
+- Network Security Groups
+- Private AKS Cluster
+- System and User Node Pools
+
+
+
+
+
+
