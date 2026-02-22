@@ -1,6 +1,7 @@
 name: "k8s-deploy"
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["app-build"]
     types:

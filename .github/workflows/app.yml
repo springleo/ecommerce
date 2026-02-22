@@ -1,6 +1,7 @@
 name: "App-build"
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["infra-deploy"]
     types:
