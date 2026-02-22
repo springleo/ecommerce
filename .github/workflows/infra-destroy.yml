@@ -18,7 +18,6 @@ jobs:
   destroy:
     if: ${{ github.event.inputs.confirm == 'DESTROY' }}
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: ${{ env.TF_WORKING_DIR }}
