@@ -1,0 +1,43 @@
+name: "App-build"
+
+on:
+  push:
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - '.github/workflows/app.yml'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  ACR_NAME: ${{ secrets.ACR_NAME }}
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: ACR Login
+        run: az acr login --name $ACR_NAME
+
+      - name: Build Backend
+        run: |
+          docker build -t $ACR_NAME.azurecr.io/backend:${IMAGE_TAG} ./backend
+          docker push $ACR_NAME.azurecr.io/backend:${IMAGE_TAG}
+
+      - name: Build Frontend
+        run: |
+          docker build -t $ACR_NAME.azurecr.io/frontend:${IMAGE_TAG} ./frontend
+          docker push $ACR_NAME.azurecr.io/frontend:${IMAGE_TAG}
