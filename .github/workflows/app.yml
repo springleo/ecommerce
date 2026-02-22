@@ -34,9 +34,11 @@ jobs:
       - name: Build Backend
         run: |
           docker build -t $ACR_NAME.azurecr.io/backend:${IMAGE_TAG} ./backend
-          docker push $ACR_NAME.azurecr.io/backend:${IMAGE_TAG}
+          docker tag $ACR_NAME.azurecr.io/backend:${IMAGE_TAG} $ACR_NAME.azurecr.io/backend:latest
+          docker push $ACR_NAME.azurecr.io/backend:latest
 
       - name: Build Frontend
         run: |
           docker build -t $ACR_NAME.azurecr.io/frontend:${IMAGE_TAG} ./frontend
-          docker push $ACR_NAME.azurecr.io/frontend:${IMAGE_TAG}
+          docker tag $ACR_NAME.azurecr.io/frontend:${IMAGE_TAG} $ACR_NAME.azurecr.io/frontend:latest
+          docker push $ACR_NAME.azurecr.io/frontend:latest
