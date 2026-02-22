@@ -1,11 +1,10 @@
 name: "App-build"
 
 on:
-  push:
-    paths:
-      - 'frontend/**'
-      - 'backend/**'
-      - '.github/workflows/app.yml'
+  workflow_run:
+    workflows: ["infra-deploy"]
+    types:
+      - completed
 
 permissions:
   id-token: write
