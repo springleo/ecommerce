@@ -17,7 +17,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest   # change to self-hosted if private AKS
-
+    environment: production
     steps:
       - uses: actions/checkout@v4
 
