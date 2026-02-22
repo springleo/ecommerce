@@ -114,7 +114,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix          = "ecommerceaks"
 
   # 🔐 Private API Server (Best Practice)
-  private_cluster_enabled = true
+  # private_cluster_enabled = true
 
   identity {
     type = "SystemAssigned"
