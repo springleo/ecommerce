@@ -27,8 +27,8 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: frontend:local
-          imagePullPolicy: Never
+          image: ecommerceacrmmikkil.azurecr.io/frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
 

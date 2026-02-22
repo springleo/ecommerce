@@ -75,8 +75,4 @@ jobs:
         run: terraform init
 
       - name: Terraform Apply
-        run: |
-          pwd; ls -lartH
-          find . -name "tfplan" -exec sh -c 'echo "Found tfplan at: {}"; file {}' \;
-          terraform apply -auto-approve ./tfplan
-        shell: bash
+        run: terraform apply -auto-approve ./tfplan
