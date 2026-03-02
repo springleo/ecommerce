@@ -1,0 +1,32 @@
+name: "Deploy Nginx Ingress"
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["app-build"]
+    types:
+      - completed
+
+permissions:
+  id-token: write
+  contents: read
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest   # change to self-hosted if private AKS
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nginx ingress controller
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          kubectl create namespace ingress-nginx
+          helm install ingress-nginx ingress-nginx/ingress-nginx \
+            --namespace ingress-nginx \
+            --set controller.replicaCount=2 \
+            --set controller.nodeSelector."kubernetes\.io/os"=linux \
+            --set controller.service.type=LoadBalancer \
+            --set controller.service.externalTrafficPolicy=Local
+        shell: bash
