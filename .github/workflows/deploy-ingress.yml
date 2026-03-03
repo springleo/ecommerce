@@ -25,13 +25,13 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Get AKS Credentials
-        run: az aks get-credentials -g ${{ secrets.AZURE_RESOURCE_GROUP }} -n ${{ secrets.AZURE_AKS_NAME }} --overwrite-existing
+        run: az aks get-credentials -g "rg-ecommerce-aks" -n "ecommerce-aks" --overwrite-existing
         shell: bash
       - name: Install kubectl
         uses: azure/setup-kubectl@v1
         with:
           version: 'latest'
-          
+
       - name: Install Nginx ingress controller Helm chart
         run: |
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
