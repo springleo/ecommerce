@@ -47,7 +47,5 @@ jobs:
 
       - name: Install Nginx ingress service
         run: |
-          pwd; ls -la
-          find . -name "ingress.yaml"
-          kubectl apply -f ${{ github.workspace }}/k8s/ingress.yaml
+          kubectl apply -f k8s/ingress.yml
         shell: bash
