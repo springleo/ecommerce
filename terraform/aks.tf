@@ -5,9 +5,7 @@ terraform {
       version = "~> 3.100"
     }
   }
-}
 
-terraform {
   backend "azurerm" {
     resource_group_name  = "tf-state-rg"
     storage_account_name = "mmikkilsa"
@@ -38,7 +36,7 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = ["10.10.0.0/16"]
 }
 
-# Public subnet (Frontend / Ingress)
+# Public subnet (optional for future use)
 resource "azurerm_subnet" "public" {
   name                 = "snet-public-frontend"
   resource_group_name  = azurerm_resource_group.rg.name
@@ -46,7 +44,7 @@ resource "azurerm_subnet" "public" {
   address_prefixes     = ["10.10.1.0/24"]
 }
 
-# Private subnet (Backend + DB workloads)
+# Private subnet (AKS nodes live here)
 resource "azurerm_subnet" "private" {
   name                 = "snet-private-backend"
   resource_group_name  = azurerm_resource_group.rg.name
@@ -55,35 +53,10 @@ resource "azurerm_subnet" "private" {
 }
 
 # -----------------------------
-# Network Security Groups
-# -----------------------------
-resource "azurerm_network_security_group" "public_nsg" {
-  name                = "nsg-public"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-}
-
-resource "azurerm_network_security_group" "private_nsg" {
-  name                = "nsg-private"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-}
-
-resource "azurerm_subnet_network_security_group_association" "public_assoc" {
-  subnet_id                 = azurerm_subnet.public.id
-  network_security_group_id = azurerm_network_security_group.public_nsg.id
-}
-
-resource "azurerm_subnet_network_security_group_association" "private_assoc" {
-  subnet_id                 = azurerm_subnet.private.id
-  network_security_group_id = azurerm_network_security_group.private_nsg.id
-}
-
-# -----------------------------
 # Azure Container Registry
 # -----------------------------
 resource "azurerm_container_registry" "acr" {
-  name                = "ecommerceacrmmikkil"   # must be globally unique
+  name                = "ecommerceacrmmikkil" # must be globally unique
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "Standard"
@@ -95,16 +68,6 @@ resource "azurerm_container_registry" "acr" {
 }
 
 # -----------------------------
-# AKS → ACR Pull Permission
-# -----------------------------
-resource "azurerm_role_assignment" "aks_acr_pull" {
-  principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
-  role_definition_name             = "AcrPull"
-  scope                            = azurerm_container_registry.acr.id
-  skip_service_principal_aad_check = true
-}
-
-# -----------------------------
 # AKS Cluster
 # -----------------------------
 resource "azurerm_kubernetes_cluster" "aks" {
@@ -113,27 +76,21 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name = azurerm_resource_group.rg.name
   dns_prefix          = "ecommerceaks"
 
-  # 🔐 Private API Server (Best Practice)
-  # private_cluster_enabled = true
-
   identity {
     type = "SystemAssigned"
   }
 
-  # Use Azure CNI for subnet-level control
   network_profile {
     network_plugin    = "azure"
     load_balancer_sku = "standard"
     network_policy    = "azure"
   }
 
-  # System Node Pool (critical components only)
   default_node_pool {
-    name                 = "system"
-    node_count           = 2
-    vm_size              = "Standard_D2s_v3"
-    vnet_subnet_id       = azurerm_subnet.private.id
-    orchestrator_version = null
+    name           = "system"
+    node_count     = 2
+    vm_size        = "Standard_D2s_v3"
+    vnet_subnet_id = azurerm_subnet.private.id
 
     upgrade_settings {
       max_surge = "33%"
@@ -148,8 +105,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 
 # -----------------------------
-# User Node Pool (Workloads)
-# Backend / Frontend scaling
+# User Node Pool
 # -----------------------------
 resource "azurerm_kubernetes_cluster_node_pool" "apps" {
   name                  = "apps"
@@ -164,7 +120,16 @@ resource "azurerm_kubernetes_cluster_node_pool" "apps" {
   max_count           = 5
 
   node_labels = {
-    "workload" = "apps"
+    workload = "apps"
   }
 }
 
+# -----------------------------
+# AKS → ACR Pull Permission
+# -----------------------------
+resource "azurerm_role_assignment" "aks_acr_pull" {
+  principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
+  role_definition_name             = "AcrPull"
+  scope                            = azurerm_container_registry.acr.id
+  skip_service_principal_aad_check = true
+}
