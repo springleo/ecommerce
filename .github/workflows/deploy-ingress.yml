@@ -2,7 +2,11 @@ name: "Deploy Nginx Ingress"
 
 on:
   workflow_dispatch:
-
+  workflow_run:
+    workflows: ["App-build"]
+    types:
+      - completed
+    
 permissions:
   id-token: write
   contents: read
@@ -13,7 +17,21 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Get AKS Credentials
+        run: az aks get-credentials -g ${{ secrets.AZURE_RESOURCE_GROUP }} -n ${{ secrets.AZURE_AKS_NAME }} --overwrite-existing
+        shell: bash
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v1
+        with:
+          version: 'latest'
+          
       - name: Install Nginx ingress controller Helm chart
         run: |
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
