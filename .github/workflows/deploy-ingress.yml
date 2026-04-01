@@ -2,10 +2,10 @@ name: "Deploy Nginx Ingress"
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["App-build"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["App-build"]
+  #   types:
+  #     - completed
     
 permissions:
   id-token: write
