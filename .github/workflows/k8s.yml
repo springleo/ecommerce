@@ -2,10 +2,10 @@ name: "k8s-deploy"
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Deploy Nginx Ingress"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["Deploy Nginx Ingress"]
+  #   types:
+  #     - completed
 
 permissions:
   id-token: write
