@@ -2,10 +2,10 @@ name: "infra-deploy"
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'terraform/**'
-      - '.github/workflows/infra.yml'
+  # push:
+  #   paths:
+  #     - 'terraform/**'
+  #     - '.github/workflows/infra.yml'
 
 permissions:
   id-token: write
