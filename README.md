@@ -121,13 +121,17 @@ This step provisions:
 Once done, donot forget to map the optional DNS name with the Public IP, as shown in the below pic.
 <img width="938" height="412" alt="image" src="https://github.com/user-attachments/assets/3cc288d4-6487-4831-b812-d2d493c17713" />
 
-At this stage, you should be able to see the frontend service being accessible on your favorite browser, using the DNS name used in the previos step: 
+At this stage, you should be able to see the frontend service being accessible on your favorite browser, using the DNS name used in the previous step.
 <img width="641" height="452" alt="image" src="https://github.com/user-attachments/assets/3c33b23b-5671-4fa7-867a-294e1ba01193" />
 
+You will also be able to see that the DNS name is now being resolved right from your PC.
 
+```
+nslookup mmikkili-ecommerce.centralindia.cloudapp.azure.com
+Server:         10.255.255.254
+Address:        10.255.255.254#53
 
-
-
-
-
-
+Non-authoritative answer:
+Name:   mmikkili-ecommerce.centralindia.cloudapp.azure.com
+Address: 13.71.62.11
+```
