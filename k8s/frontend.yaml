@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ecommerceacrmmikkil.azurecr.io/frontend:latest
+          image: springleo/ecommerce-backend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
