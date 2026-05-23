@@ -118,6 +118,15 @@ This step provisions:
 - System and User Node Pools
 
 
+Once done, donot forget to map the optional DNS name with the Public IP, as shown in the below pic.
+<img width="938" height="412" alt="image" src="https://github.com/user-attachments/assets/3cc288d4-6487-4831-b812-d2d493c17713" />
+
+At this stage, you should be able to see the frontend service being accessible on your favorite browser, using the DNS name used in the previos step: 
+<img width="641" height="452" alt="image" src="https://github.com/user-attachments/assets/3c33b23b-5671-4fa7-867a-294e1ba01193" />
+
+
+
+
 
 
 
