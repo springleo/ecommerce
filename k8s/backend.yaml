@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ecommerceacrmmikkil.azurecr.io/backend:latest
+          image: springleo/ecommerce-backend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
